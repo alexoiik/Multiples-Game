@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiples-Game</title>
+    <style>
+    body {  
+        background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3a51fced-ea87-4328-847c-be0668add858/d485bjo-6bc5c6e3-058f-4343-bb8b-37c985733e9f.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvM2E1MWZjZWQtZWE4Ny00MzI4LTg0N2MtYmUwNjY4YWRkODU4XC9kNDg1YmpvLTZiYzVjNmUzLTA1OGYtNDM0My1iYjhiLTM3Yzk4NTczM2U5Zi5qcGcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.GGTlKUuBvJPoApRV0RT1eh4EvNjGS_qYRVIUv1NA_1Y);
+        font-size:25px; 
+        font-family:'Courier New', Courier, monospace;
+        color: whitesmoke;  
+    }
+    .Button { 
+        background-image: url(https://images.unsplash.com/photo-1478728073286-db190d3d8ce6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHw%3D&w=1000&q=80);
+        color: whitesmoke; 
+        font-size:xx-large; 
+        border-radius:10%;
+    }
+    .TimeBox {
+        background-image: url(https://images.unsplash.com/photo-1478728073286-db190d3d8ce6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHw%3D&w=1000&q=80);
+        color: whitesmoke; 
+        font-size:x-large;
+        text-align:center;
+        border-radius:50%;
+    }
+    .overlay {
+        height: 0%;
+        width: 100%;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0, 0.9);
+        overflow-y: hidden;
+        transition: 0.5s;
+    }
+    .overlay-content {
+        position: relative;
+        top: 25%;
+        width: 100%;
+        text-align: center;
+        margin-top: 30px;
+    }
+    .overlay a {
+        padding: 8px;
+        text-decoration: none;
+        font-size: 36px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+    .overlay a:hover, .overlay a:focus {
+        color: #f1f1f1;
+    }
+    .overlay .closebtn {
+        position: absolute;
+        top: 20px;
+        right: 45px;
+        font-size: 60px;
+    }
+    @media screen and (max-height: 450px) {
+        .overlay { overflow-y: auto; }
+        .overlay a { font-size: 20px; }
+        .overlay .closebtn 
+        {
+            font-size: 40px;
+            top: 15px;
+            right: 35px;
+        }
+    }
+    </style>
+
+    <script>
+    //TIMER Code
+    var RightCount = 0;
+    var RightGuesses = 0;
+    var WrongGuesses = 0;
+    var count = 30;
+    var time;
+    function timeCount() 
+    {
+        document.getElementById("txt").value = count;
+        count = count - 1;
+        if (count != -2) 
+        {
+            time = setTimeout(timeCount, 1000); 
+        }
+        else
+        {
+            clearTimeout(time);
+            document.getElementById("txt").value = "";
+            //TOTAL SCORE
+            var score = (RightGuesses/RightCount) - (WrongGuesses/(5*5-RightCount)) + "<br/>";
+            var answears = "Total Multiples: "+RightCount+ "<br/>" + "Right Guesses: "
+            +RightGuesses+ "<br/>" + "Wrong Guesses: "+WrongGuesses+ "<br/>";
+            document.getElementById("results").innerHTML = ("SCORE: " + score + answears);
+            if(RightGuesses == RightCount && RightGuesses > WrongGuesses)
+                window.alert("Time's Up...\nYou Survived...");
+            else 
+                window.alert("Time's Up...\nYou died..."); 
+        }
+    }
+
+    //GAME Code
+    var num;
+    var rdNum;
+    function ActivateButton() {
+        document.getElementById("myBtn").disabled = true;
+        rdNum = Math.floor(Math.random() * (9 - 3 + 1)) + 3;
+        document.getElementById("randomNum").innerHTML = rdNum;
+        var table = document.getElementById("myTable");
+
+        for(var i = 0; i < table.rows.length; i++) {
+            var y = table.rows[i].cells;
+            for(var j = 0; j < table.rows[i].cells.length; j++) {
+                num = Math.floor(Math.random() * 100) + 1;
+                y[j].innerHTML = num; 
+                if(num%rdNum == 0)
+                    RightCount++;
+            }
+        }
+        timeCount();
+    }
+
+    function findPollaplasio(event) {
+        var myClick = event.target;
+        var poll = myClick.innerText%rdNum;
+        var guessRow = myClick.parentNode.rowIndex;
+        var guessCell = myClick.cellIndex;
+        if(poll == 0) {
+            document.getElementById("myTable").rows[guessRow].cells[guessCell].style.backgroundColor = "green";
+            RightGuesses++;
+        }
+        else {
+            document.getElementById("myTable").rows[guessRow].cells[guessCell].style.backgroundColor = "red";
+            WrongGuesses++;
+        } 
+    } 
+    </script>
+    
+</head>
+<body style="margin: 80px 180px; padding: 0; box-sizing: border-box;" onload="openNav()">
+
+    <div id="myNav" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="overlay-content" style="color:whitesmoke;">
+            In order to survive Slender's <br/><br/>hunt you must complete the puzzle correctly.<br/><br/> 
+            The goal is to find <b>every multiple</b> of the random number <br/><br/>that will appear.
+            You only have <b>30</b> seconds... in order to survive.
+            <p style="margin-top: 100px; font-size: 18px;">Created by @alexoiik</p>
+        </div>
+    </div>
+
+    <span style="font-size:30px; cursor:pointer" onclick="openNav()">&#9776; Source</span>
+
+    <script>
+    function openNav() { document.getElementById("myNav").style.height = "100%"; }
+    function closeNav() { document.getElementById("myNav").style.height = "0%"; }
+    </script>
+
+    <br/><br/>
+    <button id="myBtn" class="Button" onclick="ActivateButton()" style="cursor: pointer;">Start</button>
+    <br/><br/>
+    Time Remaining: <input type="text" id="txt" class="TimeBox" size="1" value=""/> 
+    <br/><br/>
+    Your Random Number: <span id="randomNum" style="font-size:50px;"></span>
+    <br/><br/>
+
+    <table style="cursor: pointer; background-image: url(https://images.unsplash.com/photo-1478728073286-db190d3d8ce6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHw%3D&w=1000&q=80);" 
+    id="myTable" cellpadding="20px" border="5" onclick="findPollaplasio(event)">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <span id="results"></span>
+</body>
+</html>
